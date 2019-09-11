@@ -1,9 +1,12 @@
+import imath
+import iload
 from PIL import Image, ImageDraw
 import face_recognition
 import numpy as np
 from numpy import array, empty_like
 from matplotlib.path import Path
 import dlib
+
 
 predictor_points = "shape_predictor_68_face_landmarks.dat"
 image = face_recognition.load_image_file("image.png")
@@ -54,17 +57,18 @@ coords_47 = find_coords(47)
 coords_48 = find_coords(48)
 
 
-def seg_intersection(line1_start, line1_end, line2_start, line2_end):
-    stacked = np.vstack([line1_start, line1_end, line2_start, line2_end])
-    homogeneous = np.hstack((stacked, np.ones((4, 1))))
-    line1 = np.cross(homogeneous[0], homogeneous[1])
-    line2 = np.cross(homogeneous[2], homogeneous[3])
-    a, b, c = np.cross(line1, line2)
+print(imath.seg_intersection(coords_38, coords_41, coords_42, coords_39))
+print(imath.seg_intersection(coords_44, -coords_47, -coords_48, coords_45))
 
-    return (a / c, b / c)
+imath.seg_intersection(coords_38, coords_41, coords_42, coords_39)
+lflarex = imath.CentroidLoc.x
+lflarey = imath.CentroidLoc.y
 
+imath.seg_intersection(coords_44, -coords_47, -coords_48, coords_45)
+rflarex = imath.CentroidLoc.x
+rflarey = imath.CentroidLoc.y
 
-print(seg_intersection(coords_38, coords_41, coords_42, coords_39))
-print(seg_intersection(coords_44, -coords_47, -coords_48, coords_45))
+iload.background.paste(iload.flare, lflarex, lflarey, iload.flare)
+iload.background.paste(iload.flare, rflarex, rflarey, iload.flare)
 
-pil_image = Image.fromarray(image)
+iload.background.save("image_modified_02.png")
