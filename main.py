@@ -8,8 +8,8 @@ from matplotlib.path import Path
 import dlib
 
 
-predictor_points = "shape_predictor_68_face_landmarks.dat"
-image = face_recognition.load_image_file("image.png")
+predictor_points = "resources/shape_predictor_68_face_landmarks.dat"
+image = face_recognition.load_image_file("resources/image.png")
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(predictor_points)
@@ -34,7 +34,6 @@ def find_coords(n):
     xc = shape.part(n).x
     yc = shape.part(n).y
 
-    print(array([xc, yc]))
     return array([xc, yc])
 
 
@@ -57,18 +56,23 @@ coords_47 = find_coords(47)
 coords_48 = find_coords(48)
 
 
-print(imath.seg_intersection(coords_38, coords_41, coords_42, coords_39))
-print(imath.seg_intersection(coords_44, -coords_47, -coords_48, coords_45))
+imath.lflareloc = imath.seg_intersection(coords_38, coords_41, coords_42, coords_39) - iload.flare.coff()
+imath.rflareloc = imath.seg_intersection(coords_44, -coords_47, -coords_48, coords_45) - iload.flare.coff()
 
-imath.seg_intersection(coords_38, coords_41, coords_42, coords_39)
-lflarex = imath.CentroidLoc.x
-lflarey = imath.CentroidLoc.y
+intlflarelocx = int(imath.lflareloc.x)
+intlflarelocy = int(imath.lflareloc.y)
+intrflarelocx = int(imath.rflareloc.x)
+intrflarelocy = int(imath.rflareloc.y)
 
-imath.seg_intersection(coords_44, -coords_47, -coords_48, coords_45)
-rflarex = imath.CentroidLoc.x
-rflarey = imath.CentroidLoc.y
+ileftflareloc = (intlflarelocx, intlflarelocy)
+irightflareloc = (intrflarelocx, intrflarelocy)
+print(ileftflareloc)
+print(irightflareloc)
 
-iload.background.paste(iload.flare, lflarex, lflarey, iload.flare)
-iload.background.paste(iload.flare, rflarex, rflarey, iload.flare)
+Image.Image.paste(iload.background.open, iload.flare.open, ileftflareloc, 0)
+Image.Image.paste(iload.background.open, iload.flare.open, irightflareloc, 0)
 
-iload.background.save("image_modified_02.png")
+# iload.background.paste(iload.flare, imath.lflareloc.x, imath.lflareloc.y, iload.flare)
+# iload.background.paste(iload.flare, imath.rflareloc.x, imath.rflareloc.y, iload.flare)
+
+iload.background.open.save("resources/image_modified_02.png")

@@ -2,7 +2,7 @@ import imath
 from PIL import Image
 
 
-class Image:
+class Picture:
     def __init__(self, name):
         self.name = name
         self.open = Image.open(self.name)
@@ -14,5 +14,11 @@ class Image:
         return imath.CartesianVals(self.cx, self.cy)
 
 
-background = Image("image.png").open
-flare = Image("flare.png").open
+background = Picture("resources/image.png")
+flare = Picture("resources/flare.png")
+
+background.open
+flare.open
+
+# background = Image.open("resources/image.png")
+# flare = Image.open("resources/flare.png")
