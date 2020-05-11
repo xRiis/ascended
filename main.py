@@ -1,10 +1,7 @@
 import imath
 import iload
-from PIL import Image, ImageDraw
 import face_recognition
-import numpy as np
-from numpy import array, empty_like
-from matplotlib.path import Path
+from numpy import array
 import dlib
 
 
@@ -20,16 +17,6 @@ for k, d in enumerate(detection):
     shape = predictor(image, d)
 
 
-def create_path(a, b):
-    x1 = shape.part(a).x
-    y1 = shape.part(a).y
-
-    x2 = shape.part(b).x
-    y2 = shape.part(b).y
-
-    return Path([[x1, y1], [x1, y2], [x2, y2], [x2, y1]])
-
-
 def find_coords(n):
     xc = shape.part(n).x
     yc = shape.part(n).y
@@ -37,27 +24,23 @@ def find_coords(n):
     return array([xc, yc])
 
 
-def perp(c):
-    d = empty_like(c)
-    d[0] = -c[1]
-    d[1] = c[0]
-
-    return d
-
-
-coords_38 = find_coords(38)
+coords_37 = find_coords(37)
 coords_39 = find_coords(39)
+coords_40 = find_coords(40)
 coords_41 = find_coords(41)
-coords_42 = find_coords(42)
 
-coords_44 = find_coords(44)
+coords_43 = find_coords(43)
 coords_45 = find_coords(45)
+coords_46 = find_coords(46)
 coords_47 = find_coords(47)
-coords_48 = find_coords(48)
 
+foff = iload.flare.coff()
 
-imath.lflareloc = imath.seg_intersection(coords_38, coords_41, coords_42, coords_39) - iload.flare.coff()
-imath.rflareloc = imath.seg_intersection(coords_44, -coords_47, -coords_48, coords_45) - iload.flare.coff()
+lflareavg = imath.seg_avg(coords_37, coords_40, coords_41, coords_39)
+rflareavg = imath.seg_avg(coords_43, coords_46, coords_45, coords_47)
+
+imath.lflareloc = lflareavg - foff
+imath.rflareloc = rflareavg - foff
 
 intlflarelocx = int(imath.lflareloc.x)
 intlflarelocy = int(imath.lflareloc.y)
@@ -66,13 +49,7 @@ intrflarelocy = int(imath.rflareloc.y)
 
 ileftflareloc = (intlflarelocx, intlflarelocy)
 irightflareloc = (intrflarelocx, intrflarelocy)
-print(ileftflareloc)
-print(irightflareloc)
 
-Image.Image.paste(iload.background.open, iload.flare.open, ileftflareloc, 0)
-Image.Image.paste(iload.background.open, iload.flare.open, irightflareloc, 0)
-
-# iload.background.paste(iload.flare, imath.lflareloc.x, imath.lflareloc.y, iload.flare)
-# iload.background.paste(iload.flare, imath.rflareloc.x, imath.rflareloc.y, iload.flare)
-
-iload.background.open.save("resources/image_modified_02.png")
+iload.background.open.paste(iload.flare.open, ileftflareloc, iload.flare.open.convert('RGBA'))
+iload.background.open.paste(iload.flare.open, irightflareloc, iload.flare.open.convert('RGBA'))
+iload.background.open.save("resources/new_image_modified.png")

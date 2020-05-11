@@ -5,7 +5,7 @@ from PIL import Image
 class Picture:
     def __init__(self, name):
         self.name = name
-        self.open = Image.open(self.name)
+        self.open = Image.open(self.name, 'r')
         self.xdim, self.ydim = self.open.size
         self.cx = (self.xdim / 2)
         self.cy = (self.ydim / 2)
@@ -19,6 +19,3 @@ flare = Picture("resources/flare.png")
 
 background.open
 flare.open
-
-# background = Image.open("resources/image.png")
-# flare = Image.open("resources/flare.png")
